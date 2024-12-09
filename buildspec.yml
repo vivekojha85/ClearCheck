@@ -13,19 +13,14 @@ phases:
       
   pre_build:
     commands:
-      - echo "Debug: Directory Structure"
-      - pwd
-      - echo "Root directory contents:"
+      - echo "Running functional tests"
+      - echo "Current directory structure:"
       - ls -la
-      - echo "Functional tests directory contents:"
+      - echo "Functional tests directory structure:"
       - ls -la functional_tests
-      - echo "Test data directory contents:"
-      - ls -la functional_tests/test_data || echo "test_data directory not found"
-      
+      - echo "Test data directory structure:"
+      - ls -la functional_tests/test_data
       - cd functional_tests
-      - echo "Current directory before running tests:"
-      - pwd
-      - python -c "import os; print(os.path.exists('test_data/sample_data.csv'))"
       - behave features/data_accuracy.feature -f pretty
       - cd ..
       
@@ -44,7 +39,7 @@ phases:
   post_build:
     commands:
       - echo "Deploying artifacts"
-    
+
 artifacts:
   files:
     - function.zip
