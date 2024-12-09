@@ -1,0 +1,9 @@
+--index-url https://pypi.org/simple/
+behave
+requests
+pandas
+pytest
+pytest-bdd
+python-dateutil
+fuzzywuzzy
+python-Levenshtein
