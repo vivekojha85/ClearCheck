@@ -1,0 +1,27 @@
+{
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "multi_match": {
+                  "query": "{{name}}",
+                  "fields": ["First^2", "Middle^1", "Last^2"],
+                  "fuzziness": "AUTO"
+                }
+              }
+            ],
+            "filter": [
+              {
+                "term": {
+                  "State / Province.keyword": "{{state}}"
+                }
+              },
+              {
+                "term": {
+                  "Country.keyword": "{{country}}"
+                }
+              }
+            ]
+          }
+        }
+      }

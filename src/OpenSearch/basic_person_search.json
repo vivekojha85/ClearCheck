@@ -1,0 +1,15 @@
+{
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "multi_match": {
+                            "query": "{{query_string}}",
+                            "fields": ["First^2", "Middle^1", "Last^2"],
+                            "fuzziness": "AUTO"
+                        }
+                    }
+                ]
+            }
+        }
+    }

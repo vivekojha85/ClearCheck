@@ -1,0 +1,143 @@
+{
+  "templates": {
+    "basic_person_search": {
+      "description": "Search for individuals by name with fuzzy matching",
+      "template": {
+        "query": {
+          "bool": {
+            "should": [
+              {
+                "multi_match": {
+                  "query": "{{query_string}}",
+                  "fields": ["First^2", "Middle^1", "Last^2"],
+                  "fuzziness": "AUTO",
+                  "operator": "and"
+                }
+              }
+            ],
+            "filter": [
+              {
+                "term": {
+                  "Classification.keyword": "Individual"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+
+    "advanced_person_search": {
+      "description": "Advanced person search with location filtering",
+      "template": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "multi_match": {
+                  "query": "{{name}}",
+                  "fields": ["First^2", "Middle^1", "Last^2"],
+                  "fuzziness": "AUTO"
+                }
+              }
+            ],
+            "filter": [
+              {
+                "term": {
+                  "State / Province.keyword": "{{state}}"
+                }
+              },
+              {
+                "term": {
+                  "Country.keyword": "{{country}}"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+
+    "exclusion_search": {
+      "description": "Search by exclusion details and agency",
+      "template": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "term": {
+                  "Excluding Agency.keyword": "{{agency}}"
+                }
+              }
+            ],
+            "filter": [
+              {
+                "term": {
+                  "Exclusion Type.keyword": "{{exclusion_type}}"
+                }
+              }
+            ]
+          }
+        },
+        "sort": [
+          {
+            "Creation_Date": {
+              "order": "desc"
+            }
+          }
+        ]
+      }
+    },
+
+    "date_range_search": {
+      "description": "Search exclusions within a date range",
+      "template": {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "range": {
+                  "Creation_Date": {
+                    "gte": "{{start_date}}",
+                    "lte": "{{end_date}}",
+                    "format": "yyyy-MM-dd"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "sort": [
+          {
+            "Creation_Date": {
+              "order": "desc"
+            }
+          }
+        ]
+      }
+    },
+
+    "aggregation_template": {
+      "description": "Aggregate statistics by agency and exclusion type",
+      "template": {
+        "size": 0,
+        "aggs": {
+          "by_agency": {
+            "terms": {
+              "field": "Excluding Agency.keyword",
+              "size": 10
+            },
+            "aggs": {
+              "by_exclusion_type": {
+                "terms": {
+                  "field": "Exclusion Type.keyword",
+                  "size": 5
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
