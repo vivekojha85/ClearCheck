@@ -1,0 +1,39 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+      - pip install -r functional_tests/requirements.txt
+      
+  pre_build:
+    commands:
+      - echo "Running functional tests"
+      - cd functional_tests
+      - behave features/data_accuracy.feature -f pretty
+      
+  build:
+    commands:
+      - echo "Packaging Lambda function"
+      - cd ..
+      - zip -r function.zip lambda_function.py
+      
+  post_build:
+    commands:
+      - echo "Updating Lambda function"
+      - aws lambda update-function-code --function-name sam-gov-data-puller --zip-file fileb://function.zip
+      - echo "Updating S3 website"
+      - aws s3 sync ./ui s3://mfcodeblooded-ui/ --delete
+
+artifacts:
+  files:
+    - function.zip
+    - appspec.yml
+  name: build-artifact
+
+cache:
+  paths:
+    - '/root/.cache/pip/**/*'
