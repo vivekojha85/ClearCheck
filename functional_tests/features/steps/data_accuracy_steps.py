@@ -7,9 +7,10 @@ from utilities.data_comparator import DataComparator
 
 @given('I have access to the source CSV file')
 def step_impl(context):
-    csv_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'test_data', 'sample_data.csv'))
-    if not os.path.isfile(csv_path):
+    csv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'test_Data', 'sample_data.csv')
+    if not os.path.exists(csv_path):
         raise FileNotFoundError(f"CSV file not found at: {csv_path}")
+    context.csv_path = csv_path
     context.csv_reader = CSVReader(csv_path)
     assert context.csv_reader.is_accessible(), f"CSV file not accessible at: {csv_path}"
 
