@@ -5,34 +5,43 @@ phases:
     runtime-versions:
       python: 3.9
     commands:
+      - echo "Installing dependencies"
       - pip install --upgrade pip
-      - pip install -r requirements.txt
-      - pip install -r functional_tests/requirements.txt
+      - if [ -f "functional_tests/requirements.txt" ]; then pip install -r functional_tests/requirements.txt; fi
+      - cd src/lambda && if [ -f "requirements.txt" ]; then pip install -r requirements.txt; fi && cd ../..
+      - cd src/glue && if [ -f "requirements.txt" ]; then pip install -r requirements.txt; fi && cd ../..
       
   pre_build:
     commands:
       - echo "Running functional tests"
       - cd functional_tests
       - behave features/data_accuracy.feature -f pretty
+      - cd ..
       
   build:
     commands:
       - echo "Packaging Lambda function"
-      - cd ..
-      - zip -r function.zip lambda_function.py
+      - cd src/lambda
+      - zip -r ../../function.zip ./*
+      - cd ../..
+      
+      - echo "Packaging Glue job"
+      - cd src/glue
+      - zip -r ../../glue_job.zip ./*
+      - cd ../..
       
   post_build:
     commands:
-      - echo "Updating Lambda function"
-      - aws lambda update-function-code --function-name sam-gov-data-puller --zip-file fileb://function.zip
-      - echo "Updating S3 website"
-      - aws s3 sync ./ui s3://mfcodeblooded-ui/ --delete
+      - echo "Build completed on `date`"
+      # Add OpenSearch deployment if needed
 
 artifacts:
   files:
     - function.zip
-    - appspec.yml
-  name: build-artifact
+    - glue_job.zip
+    - src/**/*
+    - buildspec.yml
+  base-directory: '.'
 
 cache:
   paths:
