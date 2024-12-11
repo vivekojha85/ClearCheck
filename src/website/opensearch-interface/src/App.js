@@ -342,11 +342,11 @@ function App() {
       
       <form className="search-container" onSubmit={handleSearch}>
         <select value={searchType} onChange={handleSearchTypeChange} className="search-select">
-          <option value="basic_person_search">Basic Person Search</option>
-          <option value="advanced_person_search">Advanced Person Search</option>
-          <option value="exclusion_search">Exclusion Search</option>
-          <option value="date_range_search">Date Range Search</option>
-          <option value="classification_search">Classification/Entity Search</option>
+          <option value="basic_person_search">Search by Individual</option>
+          <option value="advanced_person_search">Advanced Search for Individual</option>
+          <option value="exclusion_search">Search by Exclusion</option>
+          <option value="date_range_search">Search by DateRange</option>
+          <option value="classification_search">Search by Classification/Entity</option>
           <option value="aggregation_template">Aggregation Template</option>
         </select>
 
