@@ -3,7 +3,7 @@
 :root {
   --primary-color: #4f46e5;
   --primary-hover: #4338ca;
-  --surface-color: rgba(255, 255, 255, 0.6);
+  --surface-color: rgba(67, 56, 202, 0.6);
   --background-color: #f3f4f6;
   --text-primary: #111827;
   --text-secondary: #4b5563;
@@ -290,7 +290,7 @@ body {
 }
 
 .download-button:disabled {
-  background: #9ca3af;
+  background: ##4338ca;
   cursor: not-allowed;
   transform: none;
 }
@@ -311,7 +311,7 @@ body {
 }
 
 .results-table th {
-  background-color: #f8fafc;
+  background-color: #328ab5;
   color: var(--text-primary);
   font-weight: 600;
   padding: 1rem;
